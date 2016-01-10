@@ -32,6 +32,15 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
         let userName = photo["user"]!["username"] as! String
         cell.userNameCell.text = userName
         
+        let profPic = photo["user"]!["profile_picture"] as! String
+        let profPicURL = NSURL(string: profPic)
+        
+        cell.profPicCell.setImageWithURL(profPicURL!)
+        
+        let instaPic = photo["images"]!["low_resolution"]!!["url"] as! String
+        let instaPicURL = NSURL(string: instaPic)
+        
+        cell.instaImageCell.setImageWithURL(instaPicURL!)
         
         return cell
         
