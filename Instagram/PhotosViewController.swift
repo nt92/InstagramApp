@@ -88,6 +88,20 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
         // Dispose of any resources that can be recreated.
     }
     
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
+        photosTableView.deselectRowAtIndexPath(indexPath, animated:true)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let cell = sender as! UITableViewCell
+        let indexPath = photosTableView.indexPathForCell(cell)
+        let photo = photos![indexPath!.row]
+        
+        let vc = segue.destinationViewController as! PhotoDetailsViewController
+        vc.photo = photo
+        
+    }
+    
     
 }
 
