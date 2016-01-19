@@ -12,6 +12,7 @@ import AFNetworking
 class PhotosViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var photosTableView: UITableView!
+    var refreshControl: UIRefreshControl!
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         if let photos = photos{
@@ -51,11 +52,18 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        photosTableView.insertSubview(refreshControl, atIndex: 0)
+        
         photosTableView.rowHeight = 320;
         
         photosTableView.dataSource = self
         photosTableView.delegate = self
-        
+        networkRequest()
+    }
+    
+    func networkRequest(){
         let clientId = "e05c462ebd86446ea48a5af73769b602"
         let url = NSURL(string:"https://api.instagram.com/v1/media/popular?client_id=\(clientId)")
         let request = NSURLRequest(URL: url!)
@@ -78,9 +86,32 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
                 }
         });
         task.resume()
+    }
+    
+    func delay(delay:Double, closure:()->()) {
+        dispatch_after(
+            dispatch_time(
+                DISPATCH_TIME_NOW,
+                Int64(delay * Double(NSEC_PER_SEC))
+            ),
+            dispatch_get_main_queue(), closure)
+    }
+    
+    func onRefresh() {
+        delay(2, closure: {
+            self.refreshControl.endRefreshing()
+            self.networkRequest()
+        })
+    }
+    
+    func refreshControlAction(refreshControl: UIRefreshControl) {
         
+        // Make network request to fetch latest data
         
-        
+        // Do the following when the network request comes back successfully:
+        // Update tableView data source
+        self.photosTableView.reloadData()
+        refreshControl.endRefreshing()
     }
     
     override func didReceiveMemoryWarning() {
