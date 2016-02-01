@@ -104,15 +104,7 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
         })
     }
     
-    func refreshControlAction(refreshControl: UIRefreshControl) {
-        
-        // Make network request to fetch latest data
-        
-        // Do the following when the network request comes back successfully:
-        // Update tableView data source
-        self.photosTableView.reloadData()
-        refreshControl.endRefreshing()
-    }
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
